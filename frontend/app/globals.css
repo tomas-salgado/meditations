@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 min-h-screen text-gray-100 overflow-x-hidden;
+  }
+}
+
+@layer components {
+  .container {
+    @apply px-4 mx-auto max-w-7xl sm:px-6 lg:px-8;
+  }
+
+  .page-section {
+    @apply py-12 sm:py-16 lg:py-20;
+  }
+}
+
+@layer utilities {
+  .glass-effect {
+    @apply bg-gray-900/30 backdrop-blur-lg border border-gray-800/50;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-emerald-600;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-[1.02];
+  }
+
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-gray-900;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  @apply w-1.5;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-700 rounded-full hover:bg-gray-600 transition-colors;
+}
+
+/* Selection */
+::selection {
+  @apply bg-emerald-500/30 text-emerald-200;
+}
+
+/* Animation Utilities */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Layout Improvements */
+.main-layout {
+  @apply min-h-screen flex flex-col;
+}
+
+.content-area {
+  @apply flex-grow container mx-auto px-4 py-8 sm:px-6 lg:px-8;
+}
+
+.card {
+  @apply glass-effect rounded-2xl p-6 hover-scale focus-ring;
+}
+
+/* Typography Improvements */
+.heading-1 {
+  @apply text-4xl sm:text-5xl lg:text-6xl font-serif text-gradient;
+}
+
+.heading-2 {
+  @apply text-3xl sm:text-4xl font-serif text-gradient;
+}
+
+.body-text {
+  @apply text-base sm:text-lg text-gray-300 leading-relaxed;
+}
