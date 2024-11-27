@@ -1,6 +1,6 @@
 import { config } from 'dotenv';
 import { Pinecone } from '@pinecone-database/pinecone';
-import { OpenAIService } from '../src/services/openai';
+import { OpenAIService } from '../backend/services/openai';
 
 // Load environment variables
 config();

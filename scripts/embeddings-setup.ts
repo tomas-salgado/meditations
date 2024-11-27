@@ -1,9 +1,9 @@
 import { config } from 'dotenv';
 import fs from 'fs/promises';
 import path from 'path';
-import { OpenAIService } from '../src/services/openai';
-import { PineconeService } from '../src/services/pinecone';
-import { Section } from '../src/types';
+import { OpenAIService } from '../backend/services/openai';
+import { PineconeService } from '../backend/services/pinecone';
+import { Section } from '../backend/types';
 
 config();
 
@@ -47,7 +47,7 @@ function parseText(text: string): Section[] {
     }
     
     // Check if this is a numbered section
-    const match = block.match(/^([IVX]+)\.\s+(.*)/s);
+    const match = block.match(/^([IVX]+)\.\s+([\s\S]*)/);
     if (match) {
       const [_, romanNumeral, content] = match;
       sections.push({
@@ -83,7 +83,7 @@ async function setupEmbeddings() {
 
     // 3. Generate embeddings and store in Pinecone
     console.log('\nGenerating embeddings and storing in Pinecone...');
-    for (const [index, chapter] of chapters.entries()) {
+    chapters.forEach(async (chapter, index) => {
       const progress = `[${index + 1}/${chapters.length}]`;
       console.log(`\n${progress} Processing Book ${chapter.book}, Section ${chapter.number}`);
       
@@ -105,12 +105,12 @@ async function setupEmbeddings() {
 
       } catch (error: any) {
         console.error(`${progress} ✗ Error processing section:`, error.message);
-        continue; // Skip to next chapter if there's an error
+        return; // Skip to next chapter if there's an error
       }
 
       // Optional: Add delay to avoid rate limits
       await new Promise(resolve => setTimeout(resolve, 200));
-    }
+    });
 
     console.log('\nSetup complete! All sections processed.');
   } catch (error: any) {
