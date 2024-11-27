@@ -2,7 +2,6 @@ import { config } from 'dotenv';
 import { OpenAIService } from './services/openai';
 import { PineconeService } from './services/pinecone';
 
-// Load environment variables
 config();
 
 class MeditationsAI {
@@ -64,5 +63,4 @@ async function main() {
   }
 }
 
-// Run the main function
 main();
