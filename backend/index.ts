@@ -6,7 +6,6 @@ import { SearchResult } from './types/index';
 
 config();
 
-
 class MeditationsAI {
   private openai: OpenAIService;
   private pinecone: PineconeService;
@@ -36,11 +35,7 @@ class MeditationsAI {
     const claudeResponse = await this.claude.askQuestion(formattedPassages, question);
 
     // 5. Return both the AI response and the supporting passages
-    return [
-      claudeResponse,
-      '\n\nRelevant passages from Meditations:\n',
-      formattedPassages
-    ].join('\n');
+    return claudeResponse;
   }
 }
 
@@ -57,33 +52,3 @@ function formatPassageForLLM(passage: SearchResult): string {
 
   return parts.join('\n');
 }
-
-async function main() {
-  const readline = require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-
-  const meditationsAI = new MeditationsAI();
-  
-  try {
-    await meditationsAI.initialize();
-    
-    // Prompt the user for input
-    readline.question('Enter your question about Meditations: ', async (question: string) => {
-      try {
-        const response = await meditationsAI.query(question);
-        console.log('\n' + response);
-      } catch (error: any) {
-        console.error('Error:', error.message);
-      } finally {
-        readline.close();
-      }
-    });
-  } catch (error: any) {
-    console.error('Error:', error.message);
-    readline.close();
-  }
-}
-
-main();
