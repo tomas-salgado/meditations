@@ -8,7 +8,9 @@ export interface Embedding {
   id: string;
   values: number[];
   metadata: {
-    chapter: number;
+    source: string;
+    book: number;
+    section: number;
     text: string;
   };
 }
@@ -16,8 +18,9 @@ export interface Embedding {
 export interface SearchResult {
   score: number;
   book: number;
-  chapter: number;
+  section: number;
   text: string;
+  source: string;
 }
 
 export interface Section {

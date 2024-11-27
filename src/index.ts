@@ -26,7 +26,7 @@ class MeditationsAI {
 
     // 3. Format the response with sources including book and chapter
     const response = similarPassages.map(passage => 
-      `Book ${passage.book}, Chapter ${passage.chapter}, Score: ${passage.score.toFixed(2)}\n${passage.text}\n`
+      `Book ${passage.book}, Chapter ${passage.section}, Score: ${passage.score.toFixed(2)}\n${passage.text}\n`
     ).join('\n---\n');
 
     return `Here are the most relevant passages from Meditations:\n\n${response}`;

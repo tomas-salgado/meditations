@@ -14,7 +14,7 @@ export class PineconeService {
   async initialize() {
     try {
       console.log('Initializing Pinecone index...');
-      this.index = this.client.index('meditations');
+      this.index = this.client.index('stoics');
       
       console.log('PineconeService initialized successfully');
     } catch (error: any) {

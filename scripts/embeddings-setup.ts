@@ -3,44 +3,9 @@ import fs from 'fs/promises';
 import path from 'path';
 import { OpenAIService } from '../src/services/openai';
 import { PineconeService } from '../src/services/pinecone';
+import { Section } from '../src/types';
 
 config();
-
-interface Section {
-  book: number;
-  number: number;
-  content: string;
-}
-
-function parseText(text: string): Section[] {
-  const sections: Section[] = [];
-  let currentBook = 0;
-  
-  // Split by double newline to separate major blocks
-  const blocks = text.split('\n\n');
-  
-  for (const block of blocks) {
-    // Check if this is a book header
-    if (block.trim().startsWith('THE ')) {
-      // Extract book number (could make this more robust)
-      currentBook++;
-      continue;
-    }
-    
-    // Check if this is a numbered section
-    const match = block.match(/^([IVX]+)\.\s+(.*)/s);
-    if (match) {
-      const [_, romanNumeral, content] = match;
-      sections.push({
-        book: currentBook,
-        number: romanNumeralToNumber(romanNumeral),
-        content: content.trim()
-      });
-    }
-  }
-  
-  return sections;
-}
 
 // Helper function to convert Roman numerals to numbers
 function romanNumeralToNumber(roman: string): number {
@@ -64,6 +29,36 @@ function romanNumeralToNumber(roman: string): number {
     }
   }
   return result;
+}
+
+// Helper function to parse text into sections
+function parseText(text: string): Section[] {
+  const sections: Section[] = [];
+  let currentBook = 0;
+  
+  const blocks = text.split('\n\n');
+  
+  for (const block of blocks) {
+    // Check if this is a book header
+    if (block.trim().startsWith('THE ')) {
+      // Extract book number (could make this more robust)
+      currentBook++;
+      continue;
+    }
+    
+    // Check if this is a numbered section
+    const match = block.match(/^([IVX]+)\.\s+(.*)/s);
+    if (match) {
+      const [_, romanNumeral, content] = match;
+      sections.push({
+        book: currentBook,
+        number: romanNumeralToNumber(romanNumeral),
+        content: content.trim()
+      });
+    }
+  }
+  
+  return sections;
 }
 
 async function setupEmbeddings() {
@@ -100,7 +95,9 @@ async function setupEmbeddings() {
           id: `book${chapter.book}-section${chapter.number}`,
           values: embedding,
           metadata: {
-            chapter: chapter.number,
+            source: "Meditations",
+            book: chapter.book,
+            section: chapter.number,
             text: chapter.content
           }
         });
@@ -122,5 +119,4 @@ async function setupEmbeddings() {
   }
 }
 
-// Run the setup
 setupEmbeddings();
