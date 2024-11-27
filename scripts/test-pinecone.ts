@@ -19,29 +19,49 @@ async function testSimpleUpload() {
     console.log('Connecting to Pinecone...');
     const pc = new Pinecone({
       apiKey: process.env.PINECONE_API_KEY!,
-      environment: process.env.PINECONE_ENVIRONMENT!
+    });
+
+    const indexName = "meditations"
+
+    await pc.createIndex({
+      name: indexName,
+      dimension: 1536,
+      metric: 'cosine',
+      spec: {
+        serverless: {
+          cloud: 'aws',
+          region: 'us-east-1'
+        }
+      },
     });
     
     // Get index reference
     console.log('Getting index reference...');
-    const index = pc.index('meditations');
+    const index = pc.index(indexName);
     
-    // 3. Generate a test embedding
-    const testText = "What is virtue? It is to live according to nature and reason.";
-    console.log('Generating embedding...');
-    const embedding = await openai.generateEmbedding(testText);
+    // 3. Generate test embeddings for multiple texts
+    const testData = [
+      { id: 'test-1', text: "What is virtue? It is to live according to nature and reason." },
+      { id: 'test-2', text: "The best revenge is to be unlike him who performed the injury." }
+    ];
     
-    // 4. Store in Pinecone
+    console.log('Generating embeddings...');
+    const embeddings = await Promise.all(
+      testData.map(d => openai.generateEmbedding(d.text))
+    );
+    
+    // 4. Prepare records for batch upsert
+    const records = testData.map((d, i) => ({
+      id: d.id,
+      values: embeddings[i],
+      metadata: { text: d.text }
+    }));
+    
+    // 5. Store in Pinecone
     console.log('Storing in Pinecone...');
-    await index.upsert([{
-      id: 'test-1',
-      values: embedding,
-      metadata: {
-        text: testText
-      }
-    }]);
+    await index.upsert(records);
     
-    console.log('Successfully stored embedding!');
+    console.log('Successfully stored embeddings!');
     
   } catch (error: any) {
     console.error('Error details:', {
