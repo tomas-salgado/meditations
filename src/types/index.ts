@@ -15,6 +15,7 @@ export interface Embedding {
 
 export interface SearchResult {
   score: number;
+  book: number;
   chapter: number;
   text: string;
 }
