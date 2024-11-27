@@ -18,3 +18,9 @@ export interface SearchResult {
   chapter: number;
   text: string;
 }
+
+export interface Section {
+  book: number;
+  number: number;
+  content: string;
+}

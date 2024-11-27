@@ -6,12 +6,6 @@ export class PineconeService {
   private index: any;
 
   constructor() {
-    console.log('PineconeService Constructor - Environment Variables:', {
-      environment: process.env.PINECONE_ENVIRONMENT,
-      projectId: process.env.PINECONE_PROJECT_ID,
-      apiKeyExists: !!process.env.PINECONE_API_KEY
-    });
-
     this.client = new Pinecone({
       apiKey: process.env.PINECONE_API_KEY!,
     });

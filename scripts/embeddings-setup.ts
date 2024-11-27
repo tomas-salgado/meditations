@@ -72,6 +72,7 @@ async function setupEmbeddings() {
   
   const openai = new OpenAIService();
   const pinecone = new PineconeService();
+  await pinecone.initialize();
 
   try {
     // 1. Load Meditations text
@@ -84,28 +85,38 @@ async function setupEmbeddings() {
     // 2. Split into chapters
     console.log('Splitting into chapters...');
     const chapters: Section[] = parseText(text);
+    console.log(`Found ${chapters.length} sections to process`);
 
     // 3. Generate embeddings and store in Pinecone
-    console.log('Generating embeddings and storing in Pinecone...');
+    console.log('\nGenerating embeddings and storing in Pinecone...');
     for (const [index, chapter] of chapters.entries()) {
-      console.log(`Processing chapter ${index + 1}/${chapters.length}`);
+      const progress = `[${index + 1}/${chapters.length}]`;
+      console.log(`\n${progress} Processing Book ${chapter.book}, Section ${chapter.number}`);
       
-      const embedding = await openai.generateEmbedding(chapter.content);
-      
-      await pinecone.storeEmbedding({
-        id: `chapter-${chapter.number}`,
-        values: embedding,
-        metadata: {
-          chapter: chapter.number,
-          text: chapter.content.slice(0, 1000) // Store first 1000 chars as metadata
-        }
-      });
+      try {
+        const embedding = await openai.generateEmbedding(chapter.content);
+        console.log(`${progress} Generated embedding (${embedding.length} dimensions)`);
+        
+        await pinecone.storeEmbedding({
+          id: `book${chapter.book}-section${chapter.number}`,
+          values: embedding,
+          metadata: {
+            chapter: chapter.number,
+            text: chapter.content.slice(0, 1000) // Store first 1000 chars as metadata
+          }
+        });
+        console.log(`${progress} ✓ Successfully stored in Pinecone`);
+
+      } catch (error: any) {
+        console.error(`${progress} ✗ Error processing section:`, error.message);
+        continue; // Skip to next chapter if there's an error
+      }
 
       // Optional: Add delay to avoid rate limits
       await new Promise(resolve => setTimeout(resolve, 200));
     }
 
-    console.log('Setup complete!');
+    console.log('\nSetup complete! All sections processed.');
   } catch (error: any) {
     console.error('Setup failed:', error.message);
     process.exit(1);

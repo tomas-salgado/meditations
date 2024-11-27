@@ -22,18 +22,6 @@ async function testSimpleUpload() {
     });
 
     const indexName = "meditations"
-
-    await pc.createIndex({
-      name: indexName,
-      dimension: 1536,
-      metric: 'cosine',
-      spec: {
-        serverless: {
-          cloud: 'aws',
-          region: 'us-east-1'
-        }
-      },
-    });
     
     // Get index reference
     console.log('Getting index reference...');
