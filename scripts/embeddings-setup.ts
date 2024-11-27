@@ -101,7 +101,7 @@ async function setupEmbeddings() {
           values: embedding,
           metadata: {
             chapter: chapter.number,
-            text: chapter.content.slice(0, 1000) // Store first 1000 chars as metadata
+            text: chapter.content
           }
         });
         console.log(`${progress} ✓ Successfully stored in Pinecone`);
