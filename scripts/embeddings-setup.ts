@@ -3,7 +3,6 @@ import fs from 'fs/promises';
 import path from 'path';
 import { OpenAIService } from '../src/services/openai';
 import { PineconeService } from '../src/services/pinecone';
-import { Chapter } from '../src/types';
 
 config();
 
