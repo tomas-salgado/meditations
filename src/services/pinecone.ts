@@ -43,14 +43,16 @@ export class PineconeService {
   async searchSimilar(embedding: number[]): Promise<SearchResult[]> {
     const results = await this.index.query({
       vector: embedding,
-      topK: 3,
+      topK: 5,
       includeMetadata: true
     });
     
     return results.matches.map((match: any) => ({
       score: match.score,
-      chapter: match.metadata.chapter,
-      text: match.metadata.text
+      book: match.metadata.book,
+      section: match.metadata.section,
+      text: match.metadata.text,
+      source: match.metadata.source
     }));
   }
 }
