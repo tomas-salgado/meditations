@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "build": "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL next build",
+    "start": "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL next start"
   },
   "dependencies": {
     "next": "14.1.0",
