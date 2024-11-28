@@ -21,23 +21,33 @@ class MeditationsAI {
     await this.pinecone.initialize();
   }
 
-  async query(question: string): Promise<string> {
-    // 1. Generate embedding for the question
+  async query(question: string): Promise<{ similarPassages: SearchResult[]}> {
     const questionEmbedding = await this.openai.generateEmbedding(question);
-
-    // 2. Search for similar passages in Pinecone
     const similarPassages = await this.pinecone.searchSimilar(questionEmbedding);
-
-    // 3. Format the passages for LLM consumption
-    const formattedPassages = similarPassages.map(formatPassageForLLM).join('\n\n---\n\n');
-
-    // 4. Get response from Claude
-    const claudeResponse = await this.claude.askQuestion(formattedPassages, question);
-
-    // 5. Return both the AI response and the supporting passages
-    return claudeResponse;
+    return { similarPassages };
   }
+
+  async getSources(similarPassages: SearchResult[]): Promise<Array<{
+    title: string;
+    details: string;
+    text: string;
+    score: number;
+  }>> {
+    return similarPassages.map(passage => ({
+      title: 'Meditations',
+      details: `Book ${passage.book}, Section ${passage.section}`,
+      text: passage.text,
+      score: passage.score
+    }));
+  }
+
+  async getLLMResponse(similarPassages: SearchResult[], question: string): Promise<string> {
+    const formattedPassages = similarPassages.map(formatPassageForLLM).join('\n\n---\n\n');
+    const claudeResponse = await this.claude.askQuestion(formattedPassages, question);
+    return claudeResponse;
+  }  
 }
+
 
 export default MeditationsAI;
 

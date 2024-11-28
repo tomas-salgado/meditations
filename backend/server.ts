@@ -19,11 +19,22 @@ app.use(express.json());
 
 const meditationsAI = new MeditationsAI();
 
-app.post('/api/ask', async (req, res) => {
+app.post('/api/sources', async (req, res) => {
   try {
     await meditationsAI.initialize();
     const { question } = req.body;
-    const response = await meditationsAI.query(question);
+    const { similarPassages } = await meditationsAI.query(question);
+    const sources = await meditationsAI.getSources(similarPassages);
+    res.json({ sources, passages: similarPassages });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/answer', async (req, res) => {
+  try {
+    const { question, passages } = req.body;
+    const response = await meditationsAI.getLLMResponse(passages, question);
     res.json({ response });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
