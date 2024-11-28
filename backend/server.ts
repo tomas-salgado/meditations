@@ -1,5 +1,5 @@
 import express from 'express';
-import MeditationsAI from './index';
+import MeditationsAI from './index.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { config } from 'dotenv';

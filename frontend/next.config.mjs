@@ -7,8 +7,5 @@ export default {
       }
     ]
   },
-  output: 'standalone',
-  experimental: {
-    appDir: true
-  }
+  output: 'standalone'
 }
