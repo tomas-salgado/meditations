@@ -12,7 +12,7 @@
     "build": "npm run build:backend && npm run build:frontend",
     "start:backend": "cd backend && node dist/server.js",
     "start:frontend": "cd frontend && next start",
-    "start": "turbo run start:backend start:frontend"
+    "start": "cd backend && npm run build"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",

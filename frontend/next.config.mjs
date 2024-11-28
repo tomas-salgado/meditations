@@ -3,7 +3,7 @@ export default {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:3001/api/:path*'
+        destination: `${process.env.API_URL}/api/:path*`
       }
     ]
   },
