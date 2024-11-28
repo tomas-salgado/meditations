@@ -1,5 +1,4 @@
 import OpenAI from 'openai';
-import { Chapter } from '../types';
 
 export class OpenAIService {
   private client: OpenAI;
@@ -10,7 +9,6 @@ export class OpenAIService {
     
     if (!apiKey) {
       console.error('Environment variables:', {
-        NODE_ENV: process.env.NODE_ENV,
         OPENAI_KEY_EXISTS: !!process.env.OPENAI_API_KEY,
         ANTHROPIC_KEY_EXISTS: !!process.env.ANTHROPIC_API_KEY,
         PINECONE_KEY_EXISTS: !!process.env.PINECONE_API_KEY
