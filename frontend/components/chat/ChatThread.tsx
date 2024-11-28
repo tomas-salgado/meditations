@@ -6,6 +6,13 @@ import React from 'react';
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+  sources?: Array<{
+    title: string;
+    details: string;
+    text: string;
+    score: number;
+  }>;
+  isLoading?: boolean;
 }
 
 export const ChatThread = () => {
@@ -17,26 +24,56 @@ export const ChatThread = () => {
       setIsLoading(true);
       setMessages(prev => [...prev, { role: 'user', content: question }]);
 
-      const response = await fetch('/api/ask', {
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: 'Thinking...',
+        sources: [],
+        isLoading: true 
+      }]);
+
+      const sourcesResponse = await fetch('/api/sources', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question }),
       });
+      const { sources, passages } = await sourcesResponse.json();
 
-      const data = await response.json();
-      
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: data.response 
-      }]);
+      setMessages(prev => {
+        const newMessages = [...prev];
+        const lastMessage = newMessages[newMessages.length - 1];
+        if (lastMessage.role === 'assistant') {
+          lastMessage.sources = sources;
+        }
+        return newMessages;
+      });
+
+      const answerResponse = await fetch('/api/answer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question, passages }),
+      });
+      const { response } = await answerResponse.json();
+
+      setMessages(prev => {
+        const newMessages = [...prev];
+        const lastMessage = newMessages[newMessages.length - 1];
+        if (lastMessage.role === 'assistant') {
+          lastMessage.content = response;
+          lastMessage.isLoading = false;
+        }
+        return newMessages;
+      });
     } catch (error) {
       console.error('Error:', error);
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: 'Sorry, there was an error processing your request.' 
-      }]);
+      setMessages(prev => {
+        const newMessages = [...prev];
+        const lastMessage = newMessages[newMessages.length - 1];
+        if (lastMessage.role === 'assistant') {
+          lastMessage.content = 'Sorry, there was an error processing your request.';
+          lastMessage.isLoading = false;
+        }
+        return newMessages;
+      });
     } finally {
       setIsLoading(false);
     }
