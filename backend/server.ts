@@ -1,13 +1,16 @@
+import { config } from 'dotenv';
+
+// Load environment variables before any other imports
+config();
+
+// Rest of your imports
 import express from 'express';
 import MeditationsAI from './index.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { config } from 'dotenv';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-config();
 
 const app = express();
 const port = 3001;
