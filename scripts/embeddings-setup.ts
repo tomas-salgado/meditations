@@ -4,6 +4,7 @@ import path from 'path';
 import { OpenAIService } from '../backend/services/openai';
 import { PineconeService } from '../backend/services/pinecone';
 import { Section } from '../backend/types';
+import { ClaudeService } from '../backend/services/claude';
 
 config();
 
@@ -66,6 +67,7 @@ async function setupEmbeddings() {
   
   const openai = new OpenAIService();
   const pinecone = new PineconeService();
+  const claude = new ClaudeService();
   await pinecone.initialize();
 
   try {
@@ -82,13 +84,20 @@ async function setupEmbeddings() {
     console.log(`Found ${chapters.length} sections to process`);
 
     // 3. Generate embeddings and store in Pinecone
-    console.log('\nGenerating embeddings and storing in Pinecone...');
-    chapters.forEach(async (chapter, index) => {
-      const progress = `[${index + 1}/${chapters.length}]`;
+    console.log('\nModernizing passages and generating embeddings...');
+    for (let i = 0; i < chapters.length; i++) {
+      const chapter = chapters[i];
+      const progress = `[${i + 1}/${chapters.length}]`;
       console.log(`\n${progress} Processing Book ${chapter.book}, Section ${chapter.number}`);
       
       try {
-        const embedding = await openai.generateEmbedding(chapter.content);
+        const modernizedContent = await claude.modernizePassage(chapter.content);
+        console.log('\nText being embedded:');
+        console.log('-------------------');
+        console.log(modernizedContent);
+        console.log('-------------------\n');
+        
+        const embedding = await openai.generateEmbedding(modernizedContent);
         console.log(`${progress} Generated embedding (${embedding.length} dimensions)`);
         
         await pinecone.storeEmbedding({
@@ -98,19 +107,18 @@ async function setupEmbeddings() {
             source: "Meditations",
             book: chapter.book,
             section: chapter.number,
-            text: chapter.content
+            text: modernizedContent
           }
         });
         console.log(`${progress} ✓ Successfully stored in Pinecone`);
 
+        // Reduced delay between requests
+        await new Promise(resolve => setTimeout(resolve, 200));
       } catch (error: any) {
         console.error(`${progress} ✗ Error processing section:`, error.message);
-        return; // Skip to next chapter if there's an error
+        continue;
       }
-
-      // Optional: Add delay to avoid rate limits
-      await new Promise(resolve => setTimeout(resolve, 200));
-    });
+    }
 
     console.log('\nSetup complete! All sections processed.');
   } catch (error: any) {
