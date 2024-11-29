@@ -1,9 +1,7 @@
 import { config } from 'dotenv';
 
-// Load environment variables before any other imports
 config();
 
-// Rest of your imports
 import express from 'express';
 import SageMind from './index.js';
 import { fileURLToPath } from 'url';
