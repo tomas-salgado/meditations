@@ -4,15 +4,15 @@ import React from 'react';
 interface ChatInputProps {
   onSend: (message: string) => void;
   disabled?: boolean;
+  inputMessage: string;
+  setInputMessage: (message: string) => void;
 }
 
-export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
-  const [message, setMessage] = useState('');
-
+export const ChatInput = ({ onSend, disabled, inputMessage, setInputMessage }: ChatInputProps) => {
   const handleSend = () => {
-    if (message.trim() && !disabled) {
-      onSend(message.trim());
-      setMessage('');
+    if (inputMessage.trim() && !disabled) {
+      onSend(inputMessage.trim());
+      setInputMessage('');
     }
   };
 
@@ -29,8 +29,8 @@ export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
         <div className="container mx-auto max-w-4xl p-6">
           <div className="flex gap-4">
             <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={disabled}
               placeholder="Ask a question..."
@@ -39,7 +39,7 @@ export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
             />
             <button
               onClick={handleSend}
-              disabled={disabled || !message.trim()}
+              disabled={disabled || !inputMessage.trim()}
               className="bg-emerald-600 hover:bg-emerald-500 text-white px-8 rounded-xl font-medium disabled:opacity-50 disabled:hover:bg-emerald-600 transition-colors"
             >
               {disabled ? (
