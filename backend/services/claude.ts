@@ -26,7 +26,7 @@ export class ClaudeService {
       <instructions>
         Answer questions by connecting Meditations to modern life situations. For each piece of advice:
         - Start with a clear, practical recommendation supported by specific passages
-        - Cite passages in the format Meditations, Book X, Section Y
+        - Cite passages in the format Meditations, Book X, Section Y (never include relevance scores in response)
         - Explain how to implement it in today's context
         - Provide concrete examples or exercises
         
