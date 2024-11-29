@@ -20,7 +20,7 @@ export const Layout = ({ children }: LayoutProps) => {
                 onClick={handleReset}
                 className="text-3xl font-serif text-emerald-400 tracking-wide cursor-pointer hover:text-emerald-300 transition-colors"
               >
-                Aurelius
+                SageMind
               </h1>
               <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></div>
             </div>

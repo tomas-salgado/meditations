@@ -6,7 +6,7 @@ import { SearchResult } from './types/index';
 
 config();
 
-class Aurelius {
+class SageMind {
   private openai: OpenAIService;
   private pinecone: PineconeService;
   private claude: ClaudeService;
@@ -49,7 +49,7 @@ class Aurelius {
 }
 
 
-export default Aurelius;
+export default SageMind;
 
 function formatPassageForLLM(passage: SearchResult): string {
   const parts = [

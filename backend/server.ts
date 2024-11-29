@@ -5,7 +5,7 @@ config();
 
 // Rest of your imports
 import express from 'express';
-import Aurelius from './index.js';
+import SageMind from './index.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import cors from 'cors';
@@ -27,14 +27,14 @@ app.use((req, res, next) => {
   next();
 });
 
-const aurelius = new Aurelius();
+const sageMind = new SageMind();
 
 app.post('/api/sources', async (req, res) => {
   try {
-    await aurelius.initialize();
+    await sageMind.initialize();
     const { question } = req.body;
-    const { similarPassages } = await aurelius.query(question);
-    const sources = await aurelius.getSources(similarPassages);
+    const { similarPassages } = await sageMind.query(question);
+    const sources = await sageMind.getSources(similarPassages);
     res.json({ sources, passages: similarPassages });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -44,7 +44,7 @@ app.post('/api/sources', async (req, res) => {
 app.post('/api/answer', async (req, res) => {
   try {
     const { question, passages } = req.body;
-    const response = await aurelius.getLLMResponse(passages, question);
+    const response = await sageMind.getLLMResponse(passages, question);
     
     console.log(JSON.stringify({
       timestamp: new Date().toISOString(),

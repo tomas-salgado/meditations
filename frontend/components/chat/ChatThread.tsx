@@ -105,7 +105,7 @@ export const ChatThread = () => {
         {messages.length === 0 ? (
           <div className="h-full flex items-center justify-center">
             <div className="glass-effect p-8 rounded-2xl max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl font-serif text-emerald-400 mb-4">Welcome to Aurelius</h2>
+              <h2 className="text-3xl font-serif text-emerald-400 mb-4">Welcome to SageMind</h2>
               <p className="text-lg text-gray-300 mb-6">
                 Seek guidance to life's questions through the lens of Stoic philosophy
               </p>
