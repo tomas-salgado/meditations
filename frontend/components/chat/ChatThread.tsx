@@ -36,12 +36,13 @@ export const ChatThread = () => {
       setIsLoading(true);
       setMessages(prev => [...prev, { role: 'user', content: question }]);
 
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
+      const loadingMessage = { 
+        role: 'assistant' as const, 
         content: 'Thinking...',
         sources: [],
         isLoading: true 
-      }]);
+      };
+      setMessages(prev => [...prev, loadingMessage]);
 
       const sourcesResponse = await fetch('/api/sources', {
         method: 'POST',
@@ -51,9 +52,10 @@ export const ChatThread = () => {
       const { sources, passages } = await sourcesResponse.json();
 
       setMessages(prev => {
+        if (prev.length < 2) return prev;
         const newMessages = [...prev];
         const lastMessage = newMessages[newMessages.length - 1];
-        if (lastMessage.role === 'assistant') {
+        if (lastMessage && lastMessage.role === 'assistant') {
           lastMessage.sources = sources;
         }
         return newMessages;
@@ -67,9 +69,10 @@ export const ChatThread = () => {
       const { response } = await answerResponse.json();
 
       setMessages(prev => {
+        if (prev.length < 2) return prev;
         const newMessages = [...prev];
         const lastMessage = newMessages[newMessages.length - 1];
-        if (lastMessage.role === 'assistant') {
+        if (lastMessage && lastMessage.role === 'assistant') {
           lastMessage.content = response;
           lastMessage.isLoading = false;
         }
@@ -78,9 +81,10 @@ export const ChatThread = () => {
     } catch (error) {
       console.error('Error:', error);
       setMessages(prev => {
+        if (prev.length < 2) return prev;
         const newMessages = [...prev];
         const lastMessage = newMessages[newMessages.length - 1];
-        if (lastMessage.role === 'assistant') {
+        if (lastMessage && lastMessage.role === 'assistant') {
           lastMessage.content = 'Sorry, there was an error processing your request.';
           lastMessage.isLoading = false;
         }
