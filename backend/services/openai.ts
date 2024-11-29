@@ -5,7 +5,6 @@ export class OpenAIService {
 
   constructor() {
     const apiKey = process.env.OPENAI_API_KEY;
-    console.log('OpenAI API Key present:', !!apiKey);
     
     if (!apiKey) {
       console.error('Environment variables:', {

@@ -14,6 +14,10 @@ export class ClaudeService {
   }
 
   async askQuestion(passages: string, question: string) {
+    console.log('Asking Claude:', {
+      question,
+      timestamp: new Date().toISOString()
+    });
     const systemPrompt = `
       <context>
         You are an expert on Marcus Aurelius' Meditations, helping people apply ancient Stoic wisdom to modern challenges. The passages provided are from a verified translation of Meditations.
@@ -76,6 +80,8 @@ export class ClaudeService {
     if (content.type !== 'text') {
       throw new Error('Unexpected response type from Claude');
     }
+
+    console.log('Claude Response:', { text: content.text });
 
     return content.text;
   }
