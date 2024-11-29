@@ -85,5 +85,59 @@ export class ClaudeService {
 
     return content.text;
   }
+
+  async modernizePassage(passage: string): Promise<string> {
+    const msg = await this.client.messages.create({
+      model: "claude-3-sonnet-20240229",
+      max_tokens: 2000,
+      temperature: 0,
+      system: `You are an expert translator who modernizes ancient philosophical texts into clear, natural modern English.
+        You must return ONLY a JSON object in this format:
+        {
+          "modernized": "your translated text here"
+        }
+
+        Guidelines for translation:
+        - Use natural, contemporary English
+        - Break up long sentences for clarity
+        - Keep the philosophical depth but make it accessible
+        - Maintain the original ideas and metaphors
+        - Use contractions and informal language when appropriate
+        - Make it sound like something written today
+        - Keep the same meaning but make it engaging
+        - Remove archaic terms and phrasing
+        - Don't explain or interpret, just translate
+        - Don't add or remove content
+
+        Return ONLY valid JSON with your translation.`,
+      messages: [
+        {
+          role: "user", 
+          content: `Translate this passage into natural modern English:
+            "${passage}"`
+        }
+      ]
+    });
+
+    if (!msg || !msg.content) {
+      throw new Error('Invalid response from Claude API');
+    }
+
+    const content = msg.content[0];
+    if (!content || content.type !== 'text') {
+      throw new Error('Unexpected response type from Claude');
+    }
+
+    try {
+      const response = JSON.parse(content.text);
+      if (!response.modernized) {
+        throw new Error('Response missing modernized field');
+      }
+      return response.modernized;
+    } catch (error) {
+      console.error('Failed to parse Claude response:', content.text);
+      throw new Error('Failed to parse modernized passage from response');
+    }
+  }
 }
 
