@@ -29,14 +29,26 @@ app.use((req, res, next) => {
 
 const sageMind = new SageMind();
 
+// Initialize once when server starts
+(async () => {
+  try {
+    console.log('Starting server initialization...');
+    await sageMind.initialize();
+    console.log('Server initialization complete');
+  } catch (error) {
+    console.error('Failed to initialize server:', error);
+    process.exit(1);
+  }
+})();
+
 app.post('/api/sources', async (req, res) => {
   try {
-    await sageMind.initialize();
     const { question } = req.body;
     const { similarPassages } = await sageMind.query(question);
     const sources = await sageMind.getSources(similarPassages);
     res.json({ sources, passages: similarPassages });
   } catch (error: any) {
+    console.error('Error in /api/sources:', error);
     res.status(500).json({ error: error.message });
   }
 });
