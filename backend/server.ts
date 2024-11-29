@@ -27,7 +27,6 @@ app.use((req, res, next) => {
 
 const sageMind = new SageMind();
 
-// Initialize once when server starts
 (async () => {
   try {
     console.log('Starting server initialization...');
