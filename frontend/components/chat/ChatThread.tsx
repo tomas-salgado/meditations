@@ -92,7 +92,7 @@ export const ChatThread = () => {
             <div className="glass-effect p-8 rounded-2xl max-w-3xl mx-auto text-center">
               <h2 className="text-3xl font-serif text-emerald-400 mb-4">Welcome to Aurelius</h2>
               <p className="text-lg text-gray-300 mb-6">
-                Seek guidance through the lens of Stoic philosophy for life's challenges, decisions, and questions.
+                Seek guidance to life's questions through the lens of Stoic philosophy
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
