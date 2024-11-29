@@ -4,11 +4,8 @@ config();
 
 import express from 'express';
 import SageMind from './index.js';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 import cors from 'cors';
 
-const __filename = fileURLToPath(import.meta.url);
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -17,7 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 // Add timeout middleware
-app.use((req, res, next) => {
+app.use((_,res, next) => {
   res.setTimeout(30000, () => {
     res.status(408).send('Request timeout');
   });
