@@ -5,7 +5,7 @@ config();
 
 // Rest of your imports
 import express from 'express';
-import MeditationsAI from './index.js';
+import Aurelius from './index.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import cors from 'cors';
@@ -27,14 +27,14 @@ app.use((req, res, next) => {
   next();
 });
 
-const meditationsAI = new MeditationsAI();
+const aurelius = new Aurelius();
 
 app.post('/api/sources', async (req, res) => {
   try {
-    await meditationsAI.initialize();
+    await aurelius.initialize();
     const { question } = req.body;
-    const { similarPassages } = await meditationsAI.query(question);
-    const sources = await meditationsAI.getSources(similarPassages);
+    const { similarPassages } = await aurelius.query(question);
+    const sources = await aurelius.getSources(similarPassages);
     res.json({ sources, passages: similarPassages });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -44,7 +44,7 @@ app.post('/api/sources', async (req, res) => {
 app.post('/api/answer', async (req, res) => {
   try {
     const { question, passages } = req.body;
-    const response = await meditationsAI.getLLMResponse(passages, question);
+    const response = await aurelius.getLLMResponse(passages, question);
     res.json({ response });
   } catch (error: any) {
     res.status(500).json({ error: error.message });

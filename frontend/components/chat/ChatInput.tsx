@@ -33,7 +33,7 @@ export const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={disabled}
-              placeholder="Ask about Meditations..."
+              placeholder="Ask a question..."
               className="flex-1 bg-gray-800/50 text-gray-100 rounded-xl p-4 resize-none h-[60px] backdrop-blur-sm border border-gray-700/50 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all outline-none"
               rows={1}
             />

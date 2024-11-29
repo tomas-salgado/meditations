@@ -85,9 +85,9 @@ export const ChatThread = () => {
         {messages.length === 0 ? (
           <div className="h-full flex items-center justify-center">
             <div className="glass-effect p-8 rounded-2xl max-w-2xl mx-auto text-center">
-              <h2 className="text-3xl font-serif text-emerald-400 mb-4">Welcome to Meditations AI</h2>
+              <h2 className="text-3xl font-serif text-emerald-400 mb-4">Welcome to Aurelius</h2>
               <p className="text-lg text-gray-300">
-                Ask any question about Marcus Aurelius' Meditations and receive wisdom from the ancient Stoic philosophy.
+                Ask a question and receive wisdom from ancient Stoic philosophy
               </p>
             </div>
           </div>

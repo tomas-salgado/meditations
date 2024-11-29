@@ -11,7 +11,7 @@ export const Layout = ({ children }: LayoutProps) => {
         <div className="glass-effect border-b border-gray-800/50">
           <div className="container mx-auto px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <h1 className="text-3xl font-serif text-emerald-400 tracking-wide">Meditations AI</h1>
+              <h1 className="text-3xl font-serif text-emerald-400 tracking-wide">Aurelius</h1>
               <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></div>
             </div>
             <div className="flex items-center gap-4">
