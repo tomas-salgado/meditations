@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import React from 'react';
@@ -19,6 +19,17 @@ export const ChatThread = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [inputMessage, setInputMessage] = useState('');
+
+  const handleReset = () => {
+    setMessages([]);
+    setInputMessage('');
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resetChat', handleReset);
+    return () => window.removeEventListener('resetChat', handleReset);
+  }, []);
 
   const handleSendMessage = async (question: string) => {
     try {
