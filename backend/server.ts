@@ -45,6 +45,13 @@ app.post('/api/answer', async (req, res) => {
   try {
     const { question, passages } = req.body;
     const response = await aurelius.getLLMResponse(passages, question);
+    
+    console.log(JSON.stringify({
+      timestamp: new Date().toISOString(),
+      question,
+      response
+    }));
+    
     res.json({ response });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
