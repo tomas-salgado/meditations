@@ -8,6 +8,18 @@ interface SourceModalProps {
 }
 
 export const SourceModal = ({ title, content, text, onClose }: SourceModalProps) => {
+  // Parse the content string to extract book and section numbers
+  const formatContent = (content: string) => {
+    if (title === 'Meditations') {
+      return content; // Keep the existing "Book X, Section Y" format
+    } else if (title === 'Enchiridion') {
+      // Extract just the section number from "Book 1, Section Z"
+      const match = content.match(/Section (\d+)/);
+      return match ? `Section ${match[1]}` : content;
+    }
+    return content;
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
       <div 
@@ -17,7 +29,7 @@ export const SourceModal = ({ title, content, text, onClose }: SourceModalProps)
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-baseline gap-3">
             <h3 className="text-2xl font-semibold text-emerald-400">{title}</h3>
-            <span className="text-sm text-gray-400">{content}</span>
+            <span className="text-sm text-gray-400">{formatContent(content)}</span>
           </div>
           <button 
             onClick={onClose}

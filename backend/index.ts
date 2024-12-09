@@ -34,8 +34,10 @@ class SageMind {
     score: number;
   }>> {
     return similarPassages.map(passage => ({
-      title: 'Meditations',
-      details: `Book ${passage.book}, Section ${passage.section}`,
+      title: passage.source,
+      details: passage.source === 'Meditations' 
+        ? `Book ${passage.book}, Section ${passage.section}`
+        : `Section ${passage.section}`,
       text: passage.text,
       score: passage.score
     }));
@@ -53,12 +55,12 @@ export default SageMind;
 
 function formatPassageForLLM(passage: SearchResult): string {
   const parts = [
-    '[Book]: ' + passage.book,
+    passage.source === 'Meditations' ? `[Book]: ${passage.book}` : null,
     '[Section]: ' + passage.section, 
     '[Relevance Score]: ' + passage.score.toFixed(2),
     '[Source]: ' + passage.source,
     '[Text]: ' + passage.text
-  ];
+  ].filter(Boolean); // Remove null values
 
   return parts.join('\n');
 }
