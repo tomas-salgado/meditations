@@ -2,6 +2,7 @@
   "name": "sagemind",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "packageManager": "npm@10.2.4",
   "scripts": {
     "dev:backend": "tsx watch backend/server.ts",
@@ -12,7 +13,8 @@
     "build": "npm run build:backend && npm run build:frontend",
     "start:backend": "cd backend && node dist/server.js",
     "start:frontend": "cd frontend && next start",
-    "start": "turbo run start:backend start:frontend"
+    "start": "turbo run start:backend start:frontend",
+    "embeddings": "tsx scripts/enchiridion-embeddings.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
