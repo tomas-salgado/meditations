@@ -43,19 +43,21 @@ function romanNumeralToNumber(roman: string): number {
 // Simplified parser for Enchiridion format
 function parseText(text: string): Section[] {
   const sections: Section[] = [];
-  const chapters = text.split(/(?=^[IVX]+$)/m);
+  
+  // Split on Roman numerals at the start of a line, optionally followed by footnote markers
+  const chapters = text.split(/\n(?=[IVXLC]+(?:\[\d+\])?\n)/);
   
   for (const chapter of chapters) {
     // Skip empty chapters
     if (!chapter.trim()) continue;
     
-    // Extract chapter number and content
-    const lines = chapter.split('\n');
-    const romanNumeral = lines[0].trim();
-    if (romanNumeral.match(/^[IVX]+$/)) {
+    // Extract chapter number and content, handling optional footnote markers
+    const match = chapter.match(/^([IVXLC]+)(?:\[\d+\])?\n([\s\S]*)/);
+    if (match) {
+      const [_, romanNumeral, content] = match;
       sections.push({
-        chapter: romanNumeralToNumber(romanNumeral),
-        content: lines.slice(1).join('\n').trim()
+        chapter: romanNumeralToNumber(romanNumeral.trim()),
+        content: content.trim()
       });
     }
   }
@@ -67,7 +69,7 @@ async function setupEnchiridionEmbeddings() {
   console.log('Starting Enchiridion embeddings setup...');
   
   const openai = new OpenAIService();
-  const pinecone = new PineconeService();
+  const pinecone = new PineconeService('stoic-texts');
   await pinecone.initialize();
 
   try {
